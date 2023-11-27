@@ -196,7 +196,7 @@ def cvxopt_solve_problem(
     solution.y = (
         np.array(res["y"]).flatten() if b is not None else np.empty((0,))
     )
-    if h is not None:
+    if h is not None and res["z"] is not None:
         z_cvxopt = np.array(res["z"]).flatten()
         if z_cvxopt.size == h.size:
             z, z_box = split_dual_linear_box(z_cvxopt, lb, ub)

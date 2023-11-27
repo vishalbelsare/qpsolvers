@@ -18,62 +18,49 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with qpsolvers. If not, see <http://www.gnu.org/licenses/>.
 
-"""Test all available QP solvers on a dense quadratic program."""
+"""Test all available QP solvers on a model predictive control problem."""
 
 from os.path import basename
 
 from IPython import get_ipython
-from numpy import array, dot
-from numpy.linalg import norm
-from scipy.sparse import csc_matrix
+from qpsolvers import dense_solvers, sparse_solvers
 
-from qpsolvers import dense_solvers, solve_qp, sparse_solvers
+from model_predictive_control import (
+    HumanoidModelPredictiveControl,
+    HumanoidSteppingProblem,
+)
 
-M = array([[1.0, 2.0, 0.0], [-8.0, 3.0, 2.0], [0.0, 1.0, 1.0]])
-P = dot(M.T, M)
-q = dot(array([3.0, 2.0, 3.0]), M)
-G = array([[1.0, 2.0, 1.0], [2.0, 0.0, 1.0], [-1.0, 2.0, -1.0]])
-h = array([3.0, 2.0, -2.0])
-P_csc = csc_matrix(P)
-G_csc = csc_matrix(G)
+problem = HumanoidSteppingProblem()
+mpc = HumanoidModelPredictiveControl(problem)
 
 
 if __name__ == "__main__":
     if get_ipython() is None:
         print(
-            "Run the benchmark with IPython:\n\n"
+            "This example should be run with IPython:\n\n"
             f"\tipython -i {basename(__file__)}\n"
         )
         exit()
 
     dense_instr = {
-        solver: f"u = solve_qp(P, q, G, h, solver='{solver}')"
+        solver: f"u = mpc.solve(solver='{solver}', sparse=False)"
         for solver in dense_solvers
     }
     sparse_instr = {
-        solver: f"u = solve_qp(P_csc, q, G_csc, h, solver='{solver}')"
+        solver: f"u = mpc.solve(solver='{solver}', sparse=True)"
         for solver in sparse_solvers
     }
 
-    print("\nTesting all QP solvers on a dense quadratic program...")
-
-    sol0 = solve_qp(P, q, G, h, solver=dense_solvers[0])
-    abstol = 2e-4  # tolerance on absolute solution error
-    for solver in dense_solvers:
-        sol = solve_qp(P, q, G, h, solver=solver)
-        delta = norm(sol - sol0)
-        assert delta < abstol, f"{solver}'s solution offset by {delta:.1e}"
-    for solver in sparse_solvers:
-        sol = solve_qp(P_csc, q, G_csc, h, solver=solver)
-        delta = norm(sol - sol0)
-        assert delta < abstol, f"{solver}'s solution offset by {delta:.1e}"
+    benchmark = "https://github.com/qpsolvers/qpsolvers_benchmark"
+    print("\nTesting QP solvers on one given model predictive control problem")
+    print(f"For a proper benchmark, check out {benchmark}")
 
     print("\nDense solvers\n-------------")
     for solver, instr in dense_instr.items():
         print(f"{solver}: ", end="")
-        get_ipython().magic(f"timeit {instr}")
+        get_ipython().run_line_magic("timeit", instr)
 
     print("\nSparse solvers\n--------------")
     for solver, instr in sparse_instr.items():
         print(f"{solver}: ", end="")
-        get_ipython().magic(f"timeit {instr}")
+        get_ipython().run_line_magic("timeit", instr)

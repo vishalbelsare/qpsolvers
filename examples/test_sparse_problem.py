@@ -26,9 +26,8 @@ import numpy as np
 import scipy.sparse
 from IPython import get_ipython
 from numpy.linalg import norm
-from scipy.sparse import csc_matrix
-
 from qpsolvers import dense_solvers, solve_qp, sparse_solvers
+from scipy.sparse import csc_matrix
 
 n = 500
 M = scipy.sparse.lil_matrix(scipy.sparse.eye(n))
@@ -67,7 +66,7 @@ def time_dense_solvers():
     print("\nDense solvers\n-------------")
     for solver, instr in instructions.items():
         print(f"{solver}: ", end="")
-        get_ipython().magic(f"timeit {instr}")
+        get_ipython().run_line_magic("timeit", instr)
 
 
 def time_sparse_solvers():
@@ -78,17 +77,21 @@ def time_sparse_solvers():
     print("\nSparse solvers\n--------------")
     for solver, instr in instructions.items():
         print(f"{solver}: ", end="")
-        get_ipython().magic(f"timeit {instr}")
+        get_ipython().run_line_magic("timeit", instr)
 
 
 if __name__ == "__main__":
     if get_ipython() is None:
         print(
-            "Run the benchmark with IPython:\n\n"
+            "This example should be run with IPython:\n\n"
             f"\tipython -i {basename(__file__)}\n"
         )
         exit()
-    print("\nTesting all QP solvers on a sparse quadratic program...")
+
+    benchmark = "https://github.com/qpsolvers/qpsolvers_benchmark"
+    print("\nTesting all QP solvers on one given sparse quadratic program")
+    print(f"For a proper benchmark, check out {benchmark}")
+
     check_same_solutions()
     time_dense_solvers()
     time_sparse_solvers()

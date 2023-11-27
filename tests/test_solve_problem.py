@@ -116,7 +116,7 @@ class TestSolveProblem(unittest.TestCase):
                 else 1e-5
                 if solver in ["highs", "osqp"]
                 else 5e-7
-                if solver in ["clarabel", "mosek", "qpswift"]
+                if solver in ["clarabel", "mosek", "qpswift", "piqp"]
                 else 1e-7
                 if solver == "gurobi"
                 else 1e-8
@@ -146,8 +146,10 @@ class TestSolveProblem(unittest.TestCase):
         def test(self):
             problem, ref_solution = get_qpsut03()
             solution = solve_problem(problem, solver=solver)
+            self.assertEqual(solution.x.shape, (4,))
             self.assertEqual(solution.y.shape, (0,))
             self.assertEqual(solution.z.shape, (0,))
+            self.assertEqual(solution.z_box.shape, (4,))
             self.assertAlmostEqual(
                 np.linalg.norm(solution.z_box),
                 0.0,
@@ -326,8 +328,9 @@ for solver in available_solvers:
         f"test_qpsut02_{solver}",
         TestSolveProblem.get_test_qpsut02(solver),
     )
-    if solver not in ["ecos", "qpswift"]:
+    if solver not in ["ecos", "mosek", "qpswift"]:
         # ECOS: https://github.com/embotech/ecos-python/issues/49
+        # MOSEK: https://github.com/qpsolvers/qpsolvers/issues/229
         # qpSWIFT: https://github.com/qpsolvers/qpsolvers/issues/159
         setattr(
             TestSolveProblem,

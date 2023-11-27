@@ -50,12 +50,18 @@ This example outputs the solution ``[0.30769231, -0.69230769,  1.38461538]``. It
 ### PyPI
 
 [![PyPI version](https://img.shields.io/pypi/v/qpsolvers)](https://pypi.org/project/qpsolvers/)
-[![PyPI downloads](https://pepy.tech/badge/qpsolvers/month)](https://pepy.tech/project/qpsolvers)
+[![PyPI downloads](https://static.pepy.tech/badge/qpsolvers/month)](https://pepy.tech/project/qpsolvers)
 
 To install the library with open source QP solvers:
 
 ```console
 pip install qpsolvers[open_source_solvers]
+```
+
+To install a subset of QP solvers:
+
+```console
+pip install qpsolvers[clarabel,daqp,proxqp,scs]
 ```
 
 To install only the library itself:
@@ -69,7 +75,7 @@ When imported, qpsolvers loads all the solvers it can find and lists them in ``q
 ### Conda
 
 [![Conda version](https://anaconda.org/conda-forge/qpsolvers/badges/version.svg)](https://anaconda.org/conda-forge/qpsolvers)
-[![Conda downloads](https://anaconda.org/conda-forge/qpsolvers/badges/downloads.svg)](https://anaconda.org/conda-forge/qpsolvers)
+![Conda downloads](https://anaconda.org/conda-forge/qpsolvers/badges/downloads.svg)
 
 ```console
 conda install -c conda-forge qpsolvers
@@ -89,6 +95,7 @@ conda install -c conda-forge qpsolvers
 | [MOSEK](https://mosek.com/) | ``mosek`` | Interior point | Sparse | Commercial | ✔️ |
 | NPPro | ``nppro`` | Active set | Dense | Commercial | ✔️ |
 | [OSQP](https://osqp.org/) | ``osqp`` | Augmented Lagrangian | Sparse | Apache-2.0 | ✔️ |
+| [PIQP](https://github.com/PREDICT-EPFL/piqp) | ``piqp`` | Proximal Interior Point | Dense & Sparse | BSD-2-Clause | ✖️ |
 | [ProxQP](https://github.com/Simple-Robotics/proxsuite) | ``proxqp`` | Augmented Lagrangian | Dense & Sparse | BSD-2-Clause | ✔️ |
 | [qpOASES](https://github.com/coin-or/qpOASES) | ``qpoases`` | Active set | Dense | LGPL-2.1 | ➖ |
 | [qpSWIFT](https://qpswift.github.io/) | ``qpswift`` | Interior point | Sparse | GPL-3.0 | ✖️ |
@@ -102,12 +109,8 @@ Matrix arguments are NumPy arrays for dense solvers and SciPy Compressed Sparse 
 - [Can I print the list of solvers available on my machine?](https://github.com/qpsolvers/qpsolvers/discussions/37)
 - [Is it possible to solve a least squares rather than a quadratic program?](https://github.com/qpsolvers/qpsolvers/discussions/223)
 - [I have a squared norm in my cost function, how can I apply a QP solver to my problem?](https://github.com/qpsolvers/qpsolvers/discussions/224)
-- *I have a non-convex quadratic program. Is there a solver I can use?*
-  - Unfortunately most available QP solvers are designed for convex problems (i.e. problems for which `P` is positive semidefinite). That's in a way expected, as solving non-convex QP problems is NP hard.
-  - CPLEX has methods for solving non-convex quadratic problems to [either local or global optimality](https://www.ibm.com/docs/fr/icos/22.1.0?topic=qp-distinguishing-between-convex-nonconvex-qps). Notice that finding global solutions can be significantly slower than [finding local solutions](https://link.springer.com/chapter/10.1007/978-1-4613-0263-6_8).
-  - Gurobi can find [global solutions to non-convex quadratic problems](https://www.gurobi.com/wp-content/uploads/2020-01-14_Non-Convex-Quadratic-Optimization-in-Gurobi-9.0-Webinar.pdf).
-  - For a free non-convex solver, you can try the popular nonlinear solver [IPOPT](https://pypi.org/project/ipopt/) *e.g.* using [CasADi](https://web.casadi.org/).
-  - A list of (convex/non-convex) quadratic programming software (not necessarily in Python) was compiled by [Nick Gould and Phillip Toint](https://www.numerical.rl.ac.uk/people/nimg/qp/qp.html).
+- [I have a non-convex quadratic program, is there a solver I can use?](https://github.com/qpsolvers/qpsolvers/discussions/240)
+- [I have quadratic equality constraints, is there a solver I can use?](https://github.com/qpsolvers/qpsolvers/discussions/241)
 - *I get the following [build error on Windows](https://github.com/qpsolvers/qpsolvers/issues/28) when running `pip install qpsolvers`.*
   - You will need to install the [Visual C++ Build Tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/) to build all package dependencies.
 - *Can I help?*
@@ -118,7 +121,7 @@ Matrix arguments are NumPy arrays for dense solvers and SciPy Compressed Sparse 
 
 The results below come from [`qpsolvers_benchmark`](https://github.com/qpsolvers/qpsolvers_benchmark), a benchmark for QP solvers in Python.
 
-You can run the benchmark on your machine via a command-line tool (``pip install qpsolvers_benchmark``). Check out the benchmark repository for details. In the following tables, solvers are called with their default settings and compared over whole test sets by [shifted geometric mean](https://github.com/qpsolvers/qpsolvers_benchmark#shifted-geometric-mean) ("shm" for short; lower is better). We don't report the [GitHub free-for-all test set](https://github.com/qpsolvers/qpsolvers_benchmark/blob/main/github_ffa/results/github_ffa.md) yet, as it is still too small to be representative.
+You can run the benchmark on your machine via a command-line tool (``pip install qpsolvers_benchmark``). Check out the benchmark repository for details. In the following tables, solvers are called with their default settings and compared over whole test sets by [shifted geometric mean](https://github.com/qpsolvers/qpsolvers_benchmark#shifted-geometric-mean) ("shm" for short; lower is better and 1.0 is the best).
 
 ### Maros-Meszaros (hard problems)
 

@@ -21,6 +21,7 @@
 """Quadratic programming solvers in Python with a unified API."""
 
 from ._internals import available_solvers
+from .active_set import ActiveSet
 from .exceptions import (
     NoSolverSelected,
     ParamError,
@@ -44,6 +45,7 @@ from .solvers import (
     hpipm_solve_qp,
     mosek_solve_qp,
     osqp_solve_qp,
+    piqp_solve_qp,
     proxqp_solve_qp,
     qpoases_solve_qp,
     qpswift_solve_qp,
@@ -54,9 +56,10 @@ from .solvers import (
 from .unsupported import nppro_solve_qp
 from .utils import print_matrix_vector
 
-__version__ = "3.4.0"
+__version__ = "4.0.1"
 
 __all__ = [
+    "ActiveSet",
     "NoSolverSelected",
     "ParamError",
     "Problem",
@@ -78,6 +81,7 @@ __all__ = [
     "nppro_solve_qp",
     "osqp_solve_qp",
     "print_matrix_vector",
+    "piqp_solve_qp",
     "proxqp_solve_qp",
     "qpoases_solve_qp",
     "qpswift_solve_qp",

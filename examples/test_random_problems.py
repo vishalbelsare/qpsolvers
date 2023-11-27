@@ -32,9 +32,8 @@ from os.path import basename
 from timeit import timeit
 
 from numpy import dot, linspace, ones, random
-from scipy.linalg import toeplitz
-
 from qpsolvers import available_solvers, solve_qp
+from scipy.linalg import toeplitz
 
 nb_iter = 10
 sizes = [10, 20, 50, 100, 200, 500, 1000, 2000]
@@ -68,6 +67,7 @@ def plot_results(perfs):
         print("Cannot plot results, try installing python3-matplotlib")
         print("Results are stored in the global `perfs` dictionary")
         return
+
     cmap = get_cmap("tab10")
     colors = cmap(linspace(0, 1, len(available_solvers)))
     solver_color = {
@@ -90,12 +90,16 @@ def plot_results(perfs):
 if __name__ == "__main__":
     if get_ipython() is None:
         print(
-            "Run the benchmark with IPython:\n\n"
+            "This example should be run with IPython:\n\n"
             f"\tipython -i {basename(__file__)}\n"
         )
         exit()
     perfs = {}
-    print("\nTesting all QP solvers on random quadratic programs...\n")
+
+    benchmark = "https://github.com/qpsolvers/qpsolvers_benchmark"
+    print("\nTesting all solvers on a given set of random QPs")
+    print(f"For a proper benchmark, check out {benchmark}")
+
     for solver in available_solvers:
         try:
             perfs[solver] = []
